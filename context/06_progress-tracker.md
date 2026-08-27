@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Startup foundation
+- Editor chrome
 
 ## Current Goal
 
-- Verify the frontend, Express API, and Prisma database connection before implementing product features.
+- Provide reusable editor chrome primitives for future editor screens.
 
 ## Completed
 
@@ -21,6 +21,12 @@ Update this file whenever the current phase, active feature, or implementation s
 - Added the initial Prisma `Project` model and PostgreSQL migration.
 - Confirmed the frontend production build and Prisma schema validation/client generation.
 - Confirmed the Express liveness endpoint and Vite-to-Express development proxy.
+- Configured Tailwind CSS v4 and shadcn/ui for the frontend with the existing dark theme tokens.
+- Added shadcn Button, Card, Dialog, Input, Tabs, Textarea, and ScrollArea primitives.
+- Added Lucide React and the shared `cn()` class merging helper.
+- Added the controlled editor navbar and floating project sidebar components.
+- Added the reusable editor dialog pattern with title, description, content, and footer support.
+- Confirmed the frontend production build after adding the editor chrome foundation.
 
 ## In Progress
 
@@ -30,10 +36,12 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - Configure the local PostgreSQL connection and apply the initial migration.
 - Add Clerk authentication middleware as the first product foundation unit.
+- Extend the editor chrome with the next feature specification.
 
 ## Open Questions
 
 - The local PostgreSQL `postgres` user password/database credentials are not available in the workspace.
+- The editor chrome spec does not define an editor route or actual project-management behavior; those remain future feature units.
 
 ## Architecture Decisions
 
@@ -47,3 +55,4 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - The repository began with context files only. This session added the workspace scaffold and a minimal startup vertical slice, without product features.
 - The local PostgreSQL service is running on port 5432, but password authentication prevents migration/connection verification until credentials are configured in `apps/api/.env`.
+- This session added the shadcn/Tailwind frontend foundation and reusable editor chrome without changing the existing startup route or server boundaries.
