@@ -33,16 +33,24 @@ Business functionality is organized as feature modules. Each API module owns its
 - **Liveblocks**: authoritative active collaborative room state, presence, cursors, and in-session canvas edits.
 - **Vercel Blob**: persisted canvas snapshots at `canvas/{projectId}.json` and specs at `specs/{projectId}/{specId}.md`.
 - Prisma stores the Vercel Blob URL reference in `canvasJsonPath` or `filePath`, not large generated content.
+- The MVP stores one current `Spec` record per project; specification version history is out of scope.
+- Canvas snapshots are written through an explicit Save action rather than background autosave.
 
 ## Auth and Collaboration Model
 
 - The React frontend uses Clerk for sign-in and identity.
-- Express validates Clerk credentials with server-side Clerk middleware before protected handlers run.
+- The browser obtains Clerk session tokens with `getToken()` and sends them to the API as bearer tokens.
+- Express registers `clerkMiddleware()` before CORS, body parsing, and route registration.
+- Express uses `getAuth(req)` through a reusable auth guard before protected handlers run.
+- The API returns JSON `401` responses for unauthenticated requests; it does not redirect API callers to the frontend.
+- `/api/health` is the explicit public API exception for liveness and startup checks.
 - Every project has a single owner identified by Clerk user ID.
 - Projects can include additional collaborators.
 - Only the owner or a collaborator can mutate project resources.
+- Collaborators are stored as direct Clerk user IDs in a project relationship; invitation workflows are out of scope.
 - Express issues Liveblocks room tokens only after verifying project membership.
-- The frontend and API are deployed separately, so production CORS and Clerk origins must be explicitly configured.
+- No local user table or Clerk webhook synchronization is required for the current scope.
+- The frontend and API are deployed separately, so production CORS, Clerk authorized parties, redirect URLs, and SPA history fallback must be explicitly configured.
 
 ## Starter System Designs
 
@@ -60,12 +68,14 @@ Business functionality is organized as feature modules. Each API module owns its
 - Execution: API validates the request and starts a durable Trigger.dev task.
 - Output: structured node and edge updates written into the shared Liveblocks room.
 - Task status and ownership are persisted in PostgreSQL.
+- Worker tasks call a provider adapter so the application is not coupled to one AI vendor.
 
 ### Spec Generation
 
 - Input: current canvas graph and project context.
 - Execution: API starts a durable Trigger.dev task.
 - Output: Markdown technical spec saved to Vercel Blob and linked to the project in PostgreSQL.
+- Regeneration replaces the project's current spec reference; spec history and review workflows are out of scope.
 
 ## Invariants
 

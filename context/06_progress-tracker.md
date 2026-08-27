@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Editor chrome
+- Authentication and editor workspace UI
 
 ## Current Goal
 
-- Provide reusable editor chrome primitives for future editor screens.
+- Establish a polished dark workspace experience around the Clerk-authenticated frontend and reusable editor chrome.
 
 ## Completed
 
@@ -27,21 +27,38 @@ Update this file whenever the current phase, active feature, or implementation s
 - Added the controlled editor navbar and floating project sidebar components.
 - Added the reusable editor dialog pattern with title, description, content, and footer support.
 - Confirmed the frontend production build after adding the editor chrome foundation.
+- Installed `@clerk/react`, `@clerk/ui`, and `@clerk/express`.
+- Added documented Clerk environment contracts for the web and API applications.
+- Added the Clerk provider, dark/shadcn appearance configuration, auth pages, redirects, and protected editor route.
+- Added Clerk's default `UserButton` to the editor navbar.
+- Added Express Clerk middleware, API authentication guard, authorized-party validation, and bearer-token CORS support.
+- Added an authenticated frontend API client helper that sends Clerk session tokens as bearer tokens.
+- Added API middleware tests for unauthenticated and authenticated requests.
+- Revised the auth feature specification and architecture context with the frontend/API security boundary.
+- Added a reusable Ghost AI brand mark for auth and editor surfaces.
+- Refined Clerk auth screens with responsive hierarchy, token-based appearance overrides, and a compact developer-tool visual language.
+- Refined the editor navbar and project sidebar with product identity, status indicators, responsive overlay behavior, and richer empty states.
+- Added an intentional responsive editor workspace empty state without inventing project-management behavior.
+- Added `docs/architecture/ghost-ai-architecture.md` with the approved database plan, storage boundaries, flowchart, UML class diagram, and sequence diagram.
+- Recorded the approved collaborator, canvas snapshot, AI provider, and current-spec decisions in the architecture context.
 
 ## In Progress
 
 - Local PostgreSQL migration and live database health check require the local database credentials.
+- Interactive sign-in/sign-up and a valid browser session token still need to be smoke-tested against the existing Clerk application.
 
 ## Next Up
 
 - Configure the local PostgreSQL connection and apply the initial migration.
-- Add Clerk authentication middleware as the first product foundation unit.
+- Run Clerk's setup doctor when the CLI is available on the development machine and complete signed-in browser/API smoke checks.
+- Add the project-management API and enforce owner/collaborator authorization after authentication.
 - Extend the editor chrome with the next feature specification.
 
 ## Open Questions
 
 - The local PostgreSQL `postgres` user password/database credentials are not available in the workspace.
 - The editor chrome spec does not define an editor route or actual project-management behavior; those remain future feature units.
+- The production frontend and API origins still need to be recorded in deployment configuration and the existing Clerk application.
 
 ## Architecture Decisions
 
@@ -49,10 +66,22 @@ Update this file whenever the current phase, active feature, or implementation s
 - Clerk, Liveblocks, Trigger.dev, and Vercel Blob remain part of the architecture.
 - Plain JavaScript is used throughout the application.
 - API features use modular boundaries under `apps/api/src/modules`.
+- Clerk is the identity source; API requests use bearer session tokens and resource ownership uses Clerk user IDs.
+- `/api/health` is public, while all other API routes are protected by default after Clerk middleware.
 - Prisma database access is shared by the API and worker through `packages/database`.
+- Collaborators use direct Clerk user IDs in a project relationship; invitation workflows are out of scope.
+- Canvas snapshots use an explicit Save action and store only a Vercel Blob URL in `Project.canvasJsonPath`.
+- AI worker tasks call a provider adapter rather than a vendor-specific implementation.
+- The MVP stores one current specification per project; task runs remain durable relational records.
 
 ## Session Notes
 
 - The repository began with context files only. This session added the workspace scaffold and a minimal startup vertical slice, without product features.
 - The local PostgreSQL service is running on port 5432, but password authentication prevents migration/connection verification until credentials are configured in `apps/api/.env`.
 - This session added the shadcn/Tailwind frontend foundation and reusable editor chrome without changing the existing startup route or server boundaries.
+- This session added the Clerk frontend/API foundation and kept the existing health endpoint public for startup and liveness checks.
+- The API environment loader resolves `apps/api/.env` when commands run from the workspace root.
+- Automated frontend build, API middleware tests, public health smoke checks, and unauthenticated/malformed-token API checks pass.
+- `npx clerk@latest doctor --json` could not run because the Clerk CLI package does not provide a Windows `win32-x64` binary in this environment.
+- This session improved the authenticated auth and editor UI while preserving the existing dark token system and generated shadcn primitives.
+- This session documented the planned relational model and cross-service workflows without extending the Prisma schema.
