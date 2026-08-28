@@ -44,6 +44,10 @@ export const env = {
     defaultValue: "100kb",
     name: "API_BODY_LIMIT",
   }),
+  projectBodyLimit: parseBodyLimit(process.env.PROJECT_BODY_LIMIT, {
+    defaultValue: "10kb",
+    name: "PROJECT_BODY_LIMIT",
+  }),
   rateLimit: {
     globalMax: parsePositiveInteger(process.env.GLOBAL_RATE_LIMIT_MAX, {
       defaultValue: 300,

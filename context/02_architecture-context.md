@@ -46,7 +46,7 @@ Business functionality is organized as feature modules. Each API module owns its
 - `/api/health` is the explicit public API exception for liveness and startup checks.
 - Every project has a single owner identified by Clerk user ID.
 - Projects can include additional collaborators.
-- Only the owner or a collaborator can mutate project resources.
+- Only the owner or a collaborator can mutate project resources they are authorized to edit; project rename and deletion are owner-only in the current project API.
 - Collaborators are stored as direct Clerk user IDs in a project relationship; invitation workflows are out of scope.
 - Express issues Liveblocks room tokens only after verifying project membership.
 - No local user table or Clerk webhook synchronization is required for the current scope.

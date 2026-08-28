@@ -18,6 +18,7 @@ export function requireAuth(request, response, next) {
         code: "UNAUTHORIZED",
         message: "Authentication required",
       },
+      requestId: request.requestId,
     });
     return;
   }

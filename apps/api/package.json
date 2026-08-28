@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "node --import tsx --watch src/server.js",
     "start": "node --import tsx src/server.js",
-    "test": "node --test"
+    "test": "node --import tsx --test"
   },
   "dependencies": {
     "@clerk/express": "^2.1.63",
     "@ghost-ai/database": "0.1.0",
+    "@ghost-ai/shared": "0.1.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

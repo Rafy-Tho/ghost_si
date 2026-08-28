@@ -56,6 +56,12 @@ Update this file whenever the current phase, active feature, or implementation s
 - Added API regression tests for configuration validation, token types, request IDs, rate limiting, payload limits, and error redaction.
 - Reordered authenticated API rate limiting ahead of authentication so unauthenticated abuse is rate-limited, with a regression test covering the `401` then `429` sequence.
 - Added a configurable global API rate limit before Clerk middleware so every request is bounded before authentication processing.
+- Expanded the project API specification with Express routes, request and response contracts, authorization semantics, deletion behavior, and security decisions.
+- Added shared Zod validation schemas for project names and IDs, including strict unknown-field rejection and the 80-character name limit.
+- Implemented the backend project module with routes, thin controllers, services, repository persistence, centralized owner authorization, bounded project listing, and safe response field selection.
+- Registered project routes with a route-specific 10 KB JSON body limit and consistent redacted API errors.
+- Added project API tests covering owned/shared listing, creation defaults, validation, owner mutations, collaborator authorization, inaccessible IDs, archived visibility, and unauthenticated requests.
+- Updated the Prisma client runtime import for the generated TypeScript client and preloaded `tsx` for API tests.
 
 ## In Progress
 
@@ -64,7 +70,7 @@ Update this file whenever the current phase, active feature, or implementation s
 ## Next Up
 
 - Run Clerk's setup doctor when the CLI is available on the development machine and complete signed-in browser/API smoke checks.
-- Add the project-management API and enforce owner/collaborator authorization after authentication.
+- Add collaborator-management API and enforce owner-only collaborator changes after authentication.
 - Resolve the remaining security decisions in `context/07-security-plan.md` before implementing resource integrations and product endpoints.
 
 ## Open Questions
@@ -82,6 +88,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - Clerk is the identity source; API requests use bearer session tokens and resource ownership uses Clerk user IDs.
 - Protected API requests require verified Clerk session tokens; the API uses exact-origin CORS, bounded JSON parsing, security headers, request IDs, and rate limits.
 - API errors are returned as redacted JSON responses, and security-relevant logs exclude credentials and request content.
+- Project listing is owner-or-collaborator scoped; project rename and hard deletion are owner-only, with unrelated project IDs hidden as `404`.
 - `/api/health` is public, while all other API routes are protected by default after Clerk middleware.
 - Prisma database access is shared by the API and worker through `packages/database`.
 - Prisma is pinned to 7.10.0 for the current `schema.prisma` and driver-adapter workflow; Prisma 8's contract workflow is deferred.

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client.js";
+import { PrismaClient } from "../generated/prisma/client.ts";
 
 dotenv.config({
   path: fileURLToPath(new URL("../../../.env", import.meta.url)),

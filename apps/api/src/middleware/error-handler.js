@@ -1,4 +1,12 @@
 function getErrorDetails(error) {
+  if (error?.isPublicApiError) {
+    return {
+      code: error.code,
+      message: error.message,
+      status: error.status,
+    };
+  }
+
   if (error?.type === "entity.too.large") {
     return {
       code: "PAYLOAD_TOO_LARGE",
