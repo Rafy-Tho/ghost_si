@@ -1,9 +1,34 @@
 import { createBrowserRouter } from "react-router-dom";
-import { StartupPage } from "../pages/StartupPage.jsx";
+import { EditorPage } from "../pages/EditorPage.jsx";
+import { NotFoundPage } from "../pages/NotFoundPage.jsx";
+import { SignInPage } from "../features/auth/SignInPage.jsx";
+import { SignUpPage } from "../features/auth/SignUpPage.jsx";
+import { HomeRedirect, ProtectedRoute } from "../features/auth/protected-route.jsx";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <StartupPage />,
+    element: <HomeRedirect />,
+  },
+  {
+    path: "/sign-in/*",
+    element: <SignInPage />,
+  },
+  {
+    path: "/sign-up/*",
+    element: <SignUpPage />,
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/editor",
+        element: <EditorPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+    ],
   },
 ]);

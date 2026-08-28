@@ -103,3 +103,70 @@ shadcn/ui on top of Tailwind. No custom design system. Components live in `apps/
 ## Icons
 
 Lucide React. Stroke-based icons only — no filled variants. Icon sizes: `h-4 w-4` for inline, `h-5 w-5` for buttons, `h-8 w-8` for feature icons in empty states.
+
+## Modern SaaS UX/UI
+
+The application should feel like a polished, production-quality modern SaaS product — similar in quality to modern developer tools and AI workspaces.
+
+### Design Principles
+
+- Clean, minimal, premium dark-first interface.
+- Strong visual hierarchy and consistent spacing.
+- Dense but highly readable layouts.
+- Use borders and surface elevation instead of heavy shadows.
+- Avoid unnecessary cards, gradients, glow effects, and visual noise.
+- Use accent colors intentionally for actions, states, and AI functionality.
+- Keep interactions fast, subtle, and purposeful.
+
+### Interaction
+
+- Every interactive element needs hover, focus, active, disabled, and loading states.
+- Use subtle 150–200ms transitions.
+- Use tooltips for unfamiliar icon-only actions.
+- Use toast notifications for lightweight feedback.
+- Use dialogs only for destructive or important confirmations.
+- Use skeleton loaders for content loading states.
+- Support keyboard navigation and visible focus states.
+
+### SaaS Patterns
+
+Use modern SaaS patterns where appropriate:
+
+- Command palette
+- Search and filtering
+- Tabs
+- Dropdown menus
+- Tooltips
+- Toasts
+- Dialogs / Sheets
+- Skeleton loading
+- Empty states
+- Responsive navigation
+
+### Components
+
+Use shadcn/ui and Lucide React.
+
+Do not create another component library or custom design system.
+
+Before creating a custom component, check whether shadcn/ui already provides the required primitive.
+
+### Responsive Design
+
+The UI must work across desktop, laptop, tablet, and mobile.
+
+Do not simply shrink the desktop layout. Reorganize navigation, sidebars, tables, and actions appropriately for smaller screens.
+
+### Quality Bar
+
+Every screen should feel intentional and production-ready, including:
+
+- Loading states
+- Empty states
+- Error states
+- Responsive behavior
+- Keyboard accessibility
+- Consistent spacing and alignment
+- Consistent use of existing design tokens
+
+The goal is a **modern SaaS workspace**, not a generic admin dashboard.
