@@ -4,6 +4,32 @@ const allowedNodeEnvironments = new Set([
   "production",
 ]);
 
+function isLoopbackHostname(hostname) {
+  const normalizedHostname = hostname
+    .replace(/^\[|\]$/g, "")
+    .replace(/\.+$/, "")
+    .toLowerCase();
+
+  if (
+    normalizedHostname === "::1" ||
+    normalizedHostname === "localhost" ||
+    normalizedHostname.endsWith(".localhost")
+  ) {
+    return true;
+  }
+
+  const ipv4Octets = normalizedHostname.split(".");
+
+  return (
+    ipv4Octets.length === 4 &&
+    ipv4Octets[0] === "127" &&
+    ipv4Octets.slice(1).every((octet) => {
+      const value = Number(octet);
+      return /^\d{1,3}$/.test(octet) && value >= 0 && value <= 255;
+    })
+  );
+}
+
 export function parseNodeEnvironment(value) {
   const nodeEnvironment = value?.trim() || "development";
 
@@ -51,9 +77,7 @@ export function parseOrigin(value, { fallback, nodeEnvironment, name }) {
   if (
     nodeEnvironment === "production" &&
     (origin.protocol !== "https:" ||
-      ["localhost", "127.0.0.1", "::1"].includes(
-        origin.hostname.replace(/^\[|\]$/g, ""),
-      ))
+      isLoopbackHostname(origin.hostname))
   ) {
     throw new Error(`${name} must be a non-local HTTPS origin in production`);
   }

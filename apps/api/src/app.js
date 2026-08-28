@@ -31,6 +31,12 @@ app.use(
   }),
 );
 app.use(
+  createPublicRateLimiter({
+    max: env.rateLimit.globalMax,
+    windowMs: env.rateLimit.windowMs,
+  }),
+);
+app.use(
   clerkMiddleware({
     authorizedParties: [env.clientOrigin],
   }),
@@ -52,7 +58,6 @@ app.use(
   }),
   healthRouter,
 );
-app.use("/api", requireAuth);
 app.use(
   "/api",
   createAuthenticatedRateLimiter({
@@ -60,6 +65,7 @@ app.use(
     windowMs: env.rateLimit.windowMs,
   }),
 );
+app.use("/api", requireAuth);
 app.use("/api", express.json({ limit: env.requestBodyLimit, strict: true }));
 
 app.use((_request, response) => {
