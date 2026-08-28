@@ -45,6 +45,11 @@ export const env = {
     name: "API_BODY_LIMIT",
   }),
   rateLimit: {
+    globalMax: parsePositiveInteger(process.env.GLOBAL_RATE_LIMIT_MAX, {
+      defaultValue: 300,
+      maximum: 10000,
+      name: "GLOBAL_RATE_LIMIT_MAX",
+    }),
     healthMax: parsePositiveInteger(process.env.HEALTH_RATE_LIMIT_MAX, {
       defaultValue: 60,
       maximum: 10000,

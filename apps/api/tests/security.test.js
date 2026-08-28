@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import express from "express";
+import { clerkMiddleware } from "@clerk/express";
 import { errorHandler } from "../src/middleware/error-handler.js";
 import {
+  createAuthenticatedRateLimiter,
   createPublicRateLimiter,
 } from "../src/middleware/rate-limit.js";
+import { requireAuth } from "../src/middleware/require-auth.js";
 import { requestId } from "../src/middleware/request-id.js";
 import {
   parseBodyLimit,
@@ -42,6 +45,23 @@ test("rejects unknown environments and insecure production origins", () => {
       }),
     /non-local HTTPS origin/,
   );
+  for (const loopbackOrigin of [
+    "https://localhost.",
+    "https://dev.localhost",
+    "https://dev.localhost.",
+    "https://127.0.0.0",
+    "https://127.0.0.2",
+    "https://127.255.255.255",
+  ]) {
+    assert.throws(
+      () =>
+        parseOrigin(loopbackOrigin, {
+          name: "CLIENT_ORIGIN",
+          nodeEnvironment: "production",
+        }),
+      /non-local HTTPS origin/,
+    );
+  }
   assert.throws(
     () =>
       parseOrigin("https://app.example.com/path", {
@@ -191,6 +211,94 @@ test("rate limits public requests with a JSON response", async () => {
         message: "Too many requests",
       },
     });
+  } finally {
+    await server.close();
+  }
+});
+
+test("rate limits unauthenticated protected requests before authentication", async () => {
+  const app = express();
+  app.use(
+    clerkMiddleware({
+      clerkClient: {
+        authenticateRequest: async () => ({
+          headers: new Headers(),
+          status: 200,
+          toAuth: () => ({
+            isAuthenticated: false,
+            tokenType: "session_token",
+            userId: null,
+          }),
+        }),
+      },
+    }),
+  );
+  app.use(
+    "/protected",
+    createAuthenticatedRateLimiter({ max: 1, windowMs: 60_000 }),
+  );
+  app.use("/protected", requireAuth);
+  app.get("/protected", (_request, response) => {
+    response.json({ status: "ok" });
+  });
+
+  const server = await startServer(app);
+
+  try {
+    const unauthorized = await fetch(`${server.url}/protected`);
+    assert.equal(unauthorized.status, 401);
+
+    const rateLimited = await fetch(`${server.url}/protected`);
+    assert.equal(rateLimited.status, 429);
+    assert.deepEqual(await rateLimited.json(), {
+      error: {
+        code: "RATE_LIMITED",
+        message: "Too many requests",
+      },
+    });
+  } finally {
+    await server.close();
+  }
+});
+
+test("applies a global rate limit before Clerk middleware", async () => {
+  const app = express();
+  let clerkRequests = 0;
+
+  app.use(createPublicRateLimiter({ max: 1, windowMs: 60_000 }));
+  app.use(
+    clerkMiddleware({
+      clerkClient: {
+        authenticateRequest: async () => {
+          clerkRequests += 1;
+
+          return {
+            headers: new Headers(),
+            status: 200,
+            toAuth: () => ({
+              isAuthenticated: false,
+              tokenType: "session_token",
+              userId: null,
+            }),
+          };
+        },
+      },
+    }),
+  );
+  app.use("/protected", requireAuth);
+  app.get("/protected", (_request, response) => {
+    response.json({ status: "ok" });
+  });
+
+  const server = await startServer(app);
+
+  try {
+    const unauthorized = await fetch(`${server.url}/protected`);
+    assert.equal(unauthorized.status, 401);
+
+    const rateLimited = await fetch(`${server.url}/protected`);
+    assert.equal(rateLimited.status, 429);
+    assert.equal(clerkRequests, 1);
   } finally {
     await server.close();
   }

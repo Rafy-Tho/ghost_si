@@ -54,6 +54,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - Strengthened the API auth guard to require an explicit bearer Clerk session token and expose the verified user ID to downstream authorization services.
 - Hardened frontend API requests and Clerk redirect configuration against credentialed requests, external redirects, and unsafe API targets.
 - Added API regression tests for configuration validation, token types, request IDs, rate limiting, payload limits, and error redaction.
+- Reordered authenticated API rate limiting ahead of authentication so unauthenticated abuse is rate-limited, with a regression test covering the `401` then `429` sequence.
+- Added a configurable global API rate limit before Clerk middleware so every request is bounded before authentication processing.
 
 ## In Progress
 
