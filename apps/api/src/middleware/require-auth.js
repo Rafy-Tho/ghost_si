@@ -1,9 +1,18 @@
 import { getAuth } from "@clerk/express";
 
-export function requireAuth(request, response, next) {
-  const { isAuthenticated, userId } = getAuth(request);
+const bearerHeaderPattern = /^Bearer\s+\S+$/i;
 
-  if (!isAuthenticated || !userId) {
+export function requireAuth(request, response, next) {
+  const { isAuthenticated, tokenType, userId } = getAuth(request);
+  const authorization = request.get("authorization");
+
+  if (
+    !bearerHeaderPattern.test(authorization ?? "") ||
+    !isAuthenticated ||
+    !userId ||
+    tokenType !== "session_token"
+  ) {
+    response.setHeader("WWW-Authenticate", "Bearer");
     response.status(401).json({
       error: {
         code: "UNAUTHORIZED",
@@ -13,5 +22,6 @@ export function requireAuth(request, response, next) {
     return;
   }
 
+  request.userId = userId;
   next();
 }

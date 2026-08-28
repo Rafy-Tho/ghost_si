@@ -2,15 +2,34 @@ import { dark, shadcn } from "@clerk/ui/themes";
 
 const environment = import.meta.env;
 
-export const publishableKey = environment.VITE_CLERK_PUBLISHABLE_KEY;
+function readRelativeRoute(name, fallback) {
+  const route = environment[name]?.trim() || fallback;
+
+  if (
+    !route.startsWith("/") ||
+    route.startsWith("//") ||
+    route.includes("\\") ||
+    /[\u0000-\u001f\u007f]/.test(route)
+  ) {
+    throw new Error(`${name} must be a safe relative route`);
+  }
+
+  return route;
+}
+
+export const publishableKey = environment.VITE_CLERK_PUBLISHABLE_KEY?.trim();
 
 export const authRoutes = {
-  signIn: environment.VITE_CLERK_SIGN_IN_URL ?? "/sign-in",
-  signUp: environment.VITE_CLERK_SIGN_UP_URL ?? "/sign-up",
-  signInFallback:
-    environment.VITE_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL ?? "/editor",
-  signUpFallback:
-    environment.VITE_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ?? "/editor",
+  signIn: readRelativeRoute("VITE_CLERK_SIGN_IN_URL", "/sign-in"),
+  signUp: readRelativeRoute("VITE_CLERK_SIGN_UP_URL", "/sign-up"),
+  signInFallback: readRelativeRoute(
+    "VITE_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL",
+    "/editor",
+  ),
+  signUpFallback: readRelativeRoute(
+    "VITE_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL",
+    "/editor",
+  ),
 };
 
 export const clerkAppearance = {

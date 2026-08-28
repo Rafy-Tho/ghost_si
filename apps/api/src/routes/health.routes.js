@@ -18,7 +18,13 @@ router.get("/", async (_request, response) => {
     await checkDatabaseConnection();
   } catch (error) {
     database = "error";
-    console.error("Database health check failed", error);
+    console.error(
+      JSON.stringify({
+        event: "database_health_check_failed",
+        level: "error",
+        errorType: error?.name ?? "UnknownError",
+      }),
+    );
   }
 
   const healthy = database === "ok";
