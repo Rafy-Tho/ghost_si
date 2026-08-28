@@ -62,6 +62,14 @@ Update this file whenever the current phase, active feature, or implementation s
 - Registered project routes with a route-specific 10 KB JSON body limit and consistent redacted API errors.
 - Added project API tests covering owned/shared listing, creation defaults, validation, owner mutations, collaborator authorization, inaccessible IDs, archived visibility, and unauthenticated requests.
 - Updated the Prisma client runtime import for the generated TypeScript client and preloaded `tsx` for API tests.
+- Added TanStack Query as the frontend server-state layer with user-scoped project queries, mutation invalidation, and protected-cache clearing on sign-out or user changes.
+- Added an authenticated project API service with normalized errors, cancellation support, and safe `204` handling.
+- Replaced mock project dialog state with real project query/mutation actions, including loading, retry, validation, and mutation error states.
+- Added `/editor/:projectId` workspace navigation using the server-generated project CUID and removed slug-based room ID assumptions.
+- Wired the editor sidebar and dialogs to real project data and API mutations.
+- Updated the wire-editor-home feature specification, architecture context, and React code standards for the React/Vite data-fetching model.
+- Changed the desktop project sidebar to slide into its own layout column beside the workspace with coordinated width and transform transitions while preserving the mobile drawer behavior.
+- Set the sidebar to open by default on desktop-sized first loads while keeping it closed by default on mobile.
 
 ## In Progress
 
@@ -75,7 +83,6 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Open Questions
 
-- Project detail screens, project routes, and opening an existing project are intentionally deferred beyond the project-dialogs feature.
 - The production frontend and API origins still need to be recorded in deployment configuration and the existing Clerk application.
 - Security decisions listed in `context/07-security-plan.md` still need confirmation before implementing the related product boundaries.
 
@@ -85,6 +92,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - Clerk, Liveblocks, Trigger.dev, and Vercel Blob remain part of the architecture.
 - Plain JavaScript is used throughout the application.
 - API features use modular boundaries under `apps/api/src/modules`.
+- TanStack Query owns authenticated API server state in the React frontend; dialog and form drafts remain local React state.
 - Clerk is the identity source; API requests use bearer session tokens and resource ownership uses Clerk user IDs.
 - Protected API requests require verified Clerk session tokens; the API uses exact-origin CORS, bounded JSON parsing, security headers, request IDs, and rate limits.
 - API errors are returned as redacted JSON responses, and security-relevant logs exclude credentials and request content.
@@ -111,11 +119,14 @@ Update this file whenever the current phase, active feature, or implementation s
 - This session improved the authenticated auth and editor UI while preserving the existing dark token system and generated shadcn primitives.
 - This session aligned the Clerk prebuilt sign-in and sign-up forms with the shared dark workspace tokens and verified the frontend production build.
 - This session aligned the Prisma feature specification and architecture notes with the implemented relational model and Prisma Postgres setup.
-- The project-dialogs feature scope was clarified as mock-only project list mutations; project detail, routing, persistence, and project opening remain deferred.
+- The project-dialogs feature was initially scoped to mock-only project list mutations; the follow-up wire-editor-home feature now adds project persistence, routing, and project opening.
 - The mock project dialogs and sidebar actions were implemented and the frontend production build passed.
+- The wire-editor-home implementation uses TanStack Query because the Vite frontend has no React Server Component or server-side page-fetching boundary.
+- The project CUID is the canonical workspace identifier; Liveblocks room identity remains a server-derived collaboration concern.
 - The project sidebar was refined so the `My Projects` and `Shared` tabs sit directly above their project lists.
 - The project tabs now use controlled state with an explicit active style when tapped.
 - The sidebar tabs were explicitly set to a vertical layout so tab controls render above their selected project list.
 - Sidebar actions now preserve the open sidebar while Create, Rename, or Delete dialogs are active.
 - Project dialog name inputs now use explicit readable text, placeholder, background, and focus colors.
+- The desktop sidebar layout change was verified with `npm run build:web`.
 - Security baseline tests, frontend build, and Prisma validation pass. `npm audit --omit=dev` still reports 22 dependency vulnerabilities and requires a separate reachability review before applying breaking fixes.

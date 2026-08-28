@@ -5,6 +5,7 @@
 | Layer            | Technology               | Role                                                           |
 | ---------------- | ------------------------ | -------------------------------------------------------------- |
 | Frontend         | React + Vite + JavaScript | Browser application and build tooling                          |
+| Server state     | TanStack Query            | Cached API queries and project mutations in the React SPA      |
 | Frontend routing | React Router              | Client-side navigation and protected routes                    |
 | API              | Node.js + Express         | HTTP API, authorization, and request orchestration              |
 | UI               | Tailwind + shadcn/ui      | Component composition and styling                              |
@@ -19,6 +20,7 @@ The frontend, API, and Trigger.dev worker are separate deployable applications i
 ## System Boundaries
 
 - `apps/web/src` — React UI, React Router, browser-side Clerk and Liveblocks clients, and API calls.
+- TanStack Query owns cached API server state in the browser; local React state owns ephemeral UI state such as dialogs and form drafts.
 - `apps/api/src` — Express application, request validation, Clerk authorization middleware, ownership checks, API routes, and persistence orchestration.
 - `apps/worker/src` — Trigger.dev tasks for AI architecture generation and Markdown spec generation.
 - `packages/database` — Prisma schema, generated client, and database access shared by the API and worker.
@@ -85,3 +87,4 @@ Business functionality is organized as feature modules. Each API module owns its
 4. Browser-only UI and real-time behavior stay in the React frontend.
 5. Prisma database access is limited to the API and worker applications.
 6. The canvas schema must remain consistent between user-created content and imported templates.
+7. Project query cache is scoped to the authenticated Clerk user and cleared when that user signs out or changes.

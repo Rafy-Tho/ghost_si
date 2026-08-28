@@ -3,7 +3,12 @@ import { ChevronRight, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand/brand-mark.jsx";
 
-export function EditorNavbar({ isSidebarOpen, onToggleSidebar, sidebarToggleRef }) {
+export function EditorNavbar({
+  isSidebarOpen,
+  onToggleSidebar,
+  projectName,
+  sidebarToggleRef,
+}) {
   const SidebarIcon = isSidebarOpen ? PanelLeftClose : PanelLeftOpen;
   const sidebarLabel = isSidebarOpen ? "Close project sidebar" : "Open project sidebar";
 
@@ -27,7 +32,7 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar, sidebarToggleRef 
         <div className="hidden min-w-0 items-center gap-1.5 md:flex">
           <ChevronRight aria-hidden="true" className="size-4 text-copy-faint" />
           <span className="truncate font-mono text-[11px] uppercase tracking-[0.14em] text-copy-muted">
-            Untitled architecture
+            {projectName ?? "Untitled architecture"}
           </span>
         </div>
       </div>
