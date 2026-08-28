@@ -12,7 +12,7 @@ The design follows the project context:
 - Vercel Blob stores canvas snapshots and generated Markdown files.
 - Trigger.dev runs durable AI workflows outside Express request handlers.
 
-This is a planning document. The Prisma schema and migrations are not yet extended with the models described here.
+The initial `Project` and `ProjectCollaborator` models are implemented in `packages/database/prisma/schema.prisma`; `Spec` and `TaskRun` remain planned for later feature units.
 
 ## Approved MVP Decisions
 
@@ -51,6 +51,8 @@ specs/{projectId}/{specId}.md
 id              String primary key
 name            String
 ownerId         String              // Clerk user ID
+description     String nullable
+status          DRAFT | ARCHIVED
 canvasJsonPath  String nullable     // Vercel Blob URL
 createdAt       DateTime
 updatedAt       DateTime
@@ -182,6 +184,8 @@ classDiagram
         +String id
         +String name
         +String ownerId
+        +String description
+        +ProjectStatus status
         +String canvasJsonPath
         +DateTime createdAt
         +DateTime updatedAt
@@ -235,6 +239,12 @@ classDiagram
         FAILED
     }
 
+    class ProjectStatus {
+        <<enumeration>>
+        DRAFT
+        ARCHIVED
+    }
+
     Project "1" --> "0..*" ProjectCollaborator : grants access
     Project "1" --> "0..1" Spec : current specification
     Project "1" --> "0..*" TaskRun : owns task runs
@@ -246,6 +256,7 @@ classDiagram
 
     TaskRun --> TaskKind
     TaskRun --> TaskStatus
+    Project --> ProjectStatus
 ```
 
 `ClerkIdentity` is a conceptual external identity, not a PostgreSQL table or foreign-key target.
@@ -336,7 +347,7 @@ sequenceDiagram
 
 ## Implementation Order
 
-1. Extend `Project` and add `ProjectCollaborator`.
+1. Extend `Project` and add `ProjectCollaborator` (completed).
 2. Implement project creation, listing, ownership, and collaborator authorization.
 3. Add Liveblocks room authorization.
 4. Add the explicit canvas Save action and Blob snapshot adapter.
