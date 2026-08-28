@@ -3,7 +3,7 @@ import { ChevronRight, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/brand/brand-mark.jsx";
 
-export function EditorNavbar({ isSidebarOpen, onToggleSidebar }) {
+export function EditorNavbar({ isSidebarOpen, onToggleSidebar, sidebarToggleRef }) {
   const SidebarIcon = isSidebarOpen ? PanelLeftClose : PanelLeftOpen;
   const sidebarLabel = isSidebarOpen ? "Close project sidebar" : "Open project sidebar";
 
@@ -16,6 +16,7 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar }) {
           aria-label={sidebarLabel}
           className="rounded-xl text-copy-secondary hover:bg-subtle hover:text-copy-primary"
           onClick={onToggleSidebar}
+          ref={sidebarToggleRef}
           size="icon"
           title={sidebarLabel}
           variant="ghost"

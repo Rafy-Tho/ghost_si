@@ -42,6 +42,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - Added an intentional responsive editor workspace empty state without inventing project-management behavior.
 - Added `docs/architecture/ghost-ai-architecture.md` with the approved database plan, storage boundaries, flowchart, UML class diagram, and sequence diagram.
 - Recorded the approved collaborator, canvas snapshot, AI provider, and current-spec decisions in the architecture context.
+- Implemented the mock-only project dialogs, slug preview, ownership-gated sidebar actions, and create-only editor home from `context/feature_specs/04-project-dialogs.md`.
 
 ## In Progress
 
@@ -53,12 +54,11 @@ Update this file whenever the current phase, active feature, or implementation s
 - Configure the local PostgreSQL connection and apply the initial migration.
 - Run Clerk's setup doctor when the CLI is available on the development machine and complete signed-in browser/API smoke checks.
 - Add the project-management API and enforce owner/collaborator authorization after authentication.
-- Extend the editor chrome with the next feature specification.
 
 ## Open Questions
 
 - The local PostgreSQL `postgres` user password/database credentials are not available in the workspace.
-- The editor chrome spec does not define an editor route or actual project-management behavior; those remain future feature units.
+- Project detail screens, project routes, and opening an existing project are intentionally deferred beyond the project-dialogs feature.
 - The production frontend and API origins still need to be recorded in deployment configuration and the existing Clerk application.
 
 ## Architecture Decisions
@@ -87,3 +87,10 @@ Update this file whenever the current phase, active feature, or implementation s
 - This session improved the authenticated auth and editor UI while preserving the existing dark token system and generated shadcn primitives.
 - This session aligned the Clerk prebuilt sign-in and sign-up forms with the shared dark workspace tokens and verified the frontend production build.
 - This session documented the planned relational model and cross-service workflows without extending the Prisma schema.
+- The project-dialogs feature scope was clarified as mock-only project list mutations; project detail, routing, persistence, and project opening remain deferred.
+- The mock project dialogs and sidebar actions were implemented and the frontend production build passed.
+- The project sidebar was refined so the `My Projects` and `Shared` tabs sit directly above their project lists.
+- The project tabs now use controlled state with an explicit active style when tapped.
+- The sidebar tabs were explicitly set to a vertical layout so tab controls render above their selected project list.
+- Sidebar actions now preserve the open sidebar while Create, Rename, or Delete dialogs are active.
+- Project dialog name inputs now use explicit readable text, placeholder, background, and focus colors.
