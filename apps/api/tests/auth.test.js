@@ -19,8 +19,8 @@ function createTestServer(authState) {
     }),
   );
   app.use("/protected", requireAuth);
-  app.get("/protected", (_request, response) => {
-    response.json({ status: "ok" });
+  app.get("/protected", (request, response) => {
+    response.json({ status: "ok", userId: request.userId });
   });
 
   return new Promise((resolve) => {
@@ -63,10 +63,62 @@ test("allows authenticated API requests through the guard", async () => {
   });
 
   try {
-    const response = await fetch(`${server.url}/protected`);
+    const response = await fetch(`${server.url}/protected`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
 
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { status: "ok" });
+    assert.deepEqual(await response.json(), {
+      status: "ok",
+      userId: "user_test123",
+    });
+  } finally {
+    await server.close();
+  }
+});
+
+test("rejects non-session Clerk tokens", async () => {
+  const server = await createTestServer({
+    isAuthenticated: true,
+    tokenType: "oauth_token",
+    userId: "user_test123",
+  });
+
+  try {
+    const response = await fetch(`${server.url}/protected`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
+
+    assert.equal(response.status, 401);
+    assert.equal(response.headers.get("www-authenticate"), "Bearer");
+    assert.deepEqual(await response.json(), {
+      error: {
+        code: "UNAUTHORIZED",
+        message: "Authentication required",
+      },
+    });
+  } finally {
+    await server.close();
+  }
+});
+
+test("rejects an authenticated state without a bearer header", async () => {
+  const server = await createTestServer({
+    isAuthenticated: true,
+    tokenType: "session_token",
+    userId: "user_test123",
+  });
+
+  try {
+    const response = await fetch(`${server.url}/protected`);
+
+    assert.equal(response.status, 401);
+    assert.deepEqual(await response.json(), {
+      error: {
+        code: "UNAUTHORIZED",
+        message: "Authentication required",
+      },
+    });
   } finally {
     await server.close();
   }

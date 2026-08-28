@@ -47,6 +47,13 @@ Update this file whenever the current phase, active feature, or implementation s
 - Linked the supplied Prisma Postgres connection through the ignored workspace-root `.env` file.
 - Extended `Project`, added `ProjectCollaborator`, and applied the follow-up Prisma migration to Prisma Postgres.
 - Added the Prisma 7 config, generated client, deterministic seed script, and one-read verification script.
+- Added `context/07-security-plan.md` with the security threat model, release blockers, implementation phases, authorization matrix, verification gates, and production security requirements.
+- Added fail-closed API environment validation for allowed environments, exact origins, body limits, rate limits, and trusted proxy hops.
+- Added API security headers, request IDs, authenticated and public rate limiting, bounded JSON parsing, redacted JSON error handling, and safer health-check logging.
+- Updated API startup logging to structured, non-sensitive events.
+- Strengthened the API auth guard to require an explicit bearer Clerk session token and expose the verified user ID to downstream authorization services.
+- Hardened frontend API requests and Clerk redirect configuration against credentialed requests, external redirects, and unsafe API targets.
+- Added API regression tests for configuration validation, token types, request IDs, rate limiting, payload limits, and error redaction.
 
 ## In Progress
 
@@ -56,11 +63,13 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - Run Clerk's setup doctor when the CLI is available on the development machine and complete signed-in browser/API smoke checks.
 - Add the project-management API and enforce owner/collaborator authorization after authentication.
+- Resolve the remaining security decisions in `context/07-security-plan.md` before implementing resource integrations and product endpoints.
 
 ## Open Questions
 
 - Project detail screens, project routes, and opening an existing project are intentionally deferred beyond the project-dialogs feature.
 - The production frontend and API origins still need to be recorded in deployment configuration and the existing Clerk application.
+- Security decisions listed in `context/07-security-plan.md` still need confirmation before implementing the related product boundaries.
 
 ## Architecture Decisions
 
@@ -69,6 +78,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - Plain JavaScript is used throughout the application.
 - API features use modular boundaries under `apps/api/src/modules`.
 - Clerk is the identity source; API requests use bearer session tokens and resource ownership uses Clerk user IDs.
+- Protected API requests require verified Clerk session tokens; the API uses exact-origin CORS, bounded JSON parsing, security headers, request IDs, and rate limits.
+- API errors are returned as redacted JSON responses, and security-relevant logs exclude credentials and request content.
 - `/api/health` is public, while all other API routes are protected by default after Clerk middleware.
 - Prisma database access is shared by the API and worker through `packages/database`.
 - Prisma is pinned to 7.10.0 for the current `schema.prisma` and driver-adapter workflow; Prisma 8's contract workflow is deferred.
@@ -98,3 +109,4 @@ Update this file whenever the current phase, active feature, or implementation s
 - The sidebar tabs were explicitly set to a vertical layout so tab controls render above their selected project list.
 - Sidebar actions now preserve the open sidebar while Create, Rename, or Delete dialogs are active.
 - Project dialog name inputs now use explicit readable text, placeholder, background, and focus colors.
+- Security baseline tests, frontend build, and Prisma validation pass. `npm audit --omit=dev` still reports 22 dependency vulnerabilities and requires a separate reachability review before applying breaking fixes.
