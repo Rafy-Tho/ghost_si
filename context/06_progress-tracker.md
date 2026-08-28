@@ -37,6 +37,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - Revised the auth feature specification and architecture context with the frontend/API security boundary.
 - Added a reusable Ghost AI brand mark for auth and editor surfaces.
 - Refined Clerk auth screens with responsive hierarchy, token-based appearance overrides, and a compact developer-tool visual language.
+- Extended the prebuilt Clerk sign-in and sign-up appearance with Ghost AI surface, input, focus, state, social button, and footer styling.
 - Refined the editor navbar and project sidebar with product identity, status indicators, responsive overlay behavior, and richer empty states.
 - Added an intentional responsive editor workspace empty state without inventing project-management behavior.
 - Added `docs/architecture/ghost-ai-architecture.md` with the approved database plan, storage boundaries, flowchart, UML class diagram, and sequence diagram.
@@ -84,4 +85,5 @@ Update this file whenever the current phase, active feature, or implementation s
 - Automated frontend build, API middleware tests, public health smoke checks, and unauthenticated/malformed-token API checks pass.
 - `npx clerk@latest doctor --json` could not run because the Clerk CLI package does not provide a Windows `win32-x64` binary in this environment.
 - This session improved the authenticated auth and editor UI while preserving the existing dark token system and generated shadcn primitives.
+- This session aligned the Clerk prebuilt sign-in and sign-up forms with the shared dark workspace tokens and verified the frontend production build.
 - This session documented the planned relational model and cross-service workflows without extending the Prisma schema.

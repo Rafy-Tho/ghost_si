@@ -38,12 +38,12 @@ export function AuthLayout({ children, description, title }) {
         </div>
       </section>
 
-      <section className="flex min-h-screen items-center justify-center px-4 py-8 sm:px-8 lg:px-12">
+      <section className="flex min-h-screen items-center justify-center px-4 py-8 sm:px-8 lg:px-12 lg:py-12">
         <div className="w-full max-w-md">
-          <div className="mb-10 lg:hidden">
+          <div className="mb-8 lg:hidden">
             <BrandMark />
           </div>
-          <div className="mb-6">
+          <div className="mb-7">
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
               {title} / Workspace access
             </p>

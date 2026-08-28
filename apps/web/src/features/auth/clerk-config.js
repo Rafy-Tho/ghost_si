@@ -41,14 +41,29 @@ export const clerkAppearance = {
     borderRadius: "0.75rem",
   },
   elements: {
-    card: "border border-surface-border bg-surface shadow-none",
+    rootBox: "w-full",
+    card: "rounded-2xl border border-surface-border bg-surface shadow-none",
+    headerTitle: "font-semibold tracking-[-0.02em] text-copy-primary",
+    headerSubtitle: "text-copy-muted",
+    socialButtonsBlockButton:
+      "border-surface-border bg-elevated text-copy-primary transition-colors hover:border-surface-border hover:bg-subtle",
+    socialButtonsBlockButtonText: "text-copy-secondary",
     dividerLine: "bg-surface-border",
     dividerText: "text-copy-muted",
-    formButtonPrimary: "bg-brand text-primary-foreground hover:bg-brand/80",
-    formFieldInput: "border-surface-border bg-elevated text-copy-primary",
     formFieldLabel: "text-copy-secondary",
-    footerActionLink: "text-brand hover:text-brand/80",
-    headerSubtitle: "text-copy-muted",
-    headerTitle: "text-copy-primary",
+    formFieldInput:
+      "border-surface-border bg-elevated text-copy-primary shadow-none transition-colors placeholder:text-copy-faint focus:border-brand focus:ring-2 focus:ring-brand/20",
+    formFieldInputShowPasswordButton: "text-copy-muted hover:text-copy-primary",
+    formButtonPrimary:
+      "h-11 bg-brand font-medium text-primary-foreground shadow-none transition-colors hover:bg-brand/80 focus:ring-2 focus:ring-brand/30 disabled:opacity-60",
+    formFieldErrorText: "text-error",
+    formFieldSuccessText: "text-success",
+    alert: "border border-error/40 bg-error/10 text-error",
+    footerActionText: "text-copy-muted",
+    footerActionLink: "font-medium text-brand hover:text-brand/80",
+    identityPreview: "border-surface-border bg-elevated text-copy-primary",
+    identityPreviewEditButton: "text-brand hover:text-brand/80",
+    otpCodeFieldInput:
+      "border-surface-border bg-elevated text-copy-primary shadow-none focus:border-brand focus:ring-2 focus:ring-brand/20",
   },
 };
