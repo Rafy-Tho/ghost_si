@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "start": "node src/server.js",
+    "dev": "node --import tsx --watch src/server.js",
+    "start": "node --import tsx src/server.js",
     "test": "node --test"
   },
   "dependencies": {
@@ -14,5 +14,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.12"
   }
 }

@@ -43,21 +43,22 @@ Update this file whenever the current phase, active feature, or implementation s
 - Added `docs/architecture/ghost-ai-architecture.md` with the approved database plan, storage boundaries, flowchart, UML class diagram, and sequence diagram.
 - Recorded the approved collaborator, canvas snapshot, AI provider, and current-spec decisions in the architecture context.
 - Implemented the mock-only project dialogs, slug preview, ownership-gated sidebar actions, and create-only editor home from `context/feature_specs/04-project-dialogs.md`.
+- Installed Prisma 7.10.0, `@prisma/adapter-pg`, `pg`, `dotenv`, and Prisma script tooling in `packages/database`.
+- Linked the supplied Prisma Postgres connection through the ignored workspace-root `.env` file.
+- Extended `Project`, added `ProjectCollaborator`, and applied the follow-up Prisma migration to Prisma Postgres.
+- Added the Prisma 7 config, generated client, deterministic seed script, and one-read verification script.
 
 ## In Progress
 
-- Local PostgreSQL migration and live database health check require the local database credentials.
 - Interactive sign-in/sign-up and a valid browser session token still need to be smoke-tested against the existing Clerk application.
 
 ## Next Up
 
-- Configure the local PostgreSQL connection and apply the initial migration.
 - Run Clerk's setup doctor when the CLI is available on the development machine and complete signed-in browser/API smoke checks.
 - Add the project-management API and enforce owner/collaborator authorization after authentication.
 
 ## Open Questions
 
-- The local PostgreSQL `postgres` user password/database credentials are not available in the workspace.
 - Project detail screens, project routes, and opening an existing project are intentionally deferred beyond the project-dialogs feature.
 - The production frontend and API origins still need to be recorded in deployment configuration and the existing Clerk application.
 
@@ -70,6 +71,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - Clerk is the identity source; API requests use bearer session tokens and resource ownership uses Clerk user IDs.
 - `/api/health` is public, while all other API routes are protected by default after Clerk middleware.
 - Prisma database access is shared by the API and worker through `packages/database`.
+- Prisma is pinned to 7.10.0 for the current `schema.prisma` and driver-adapter workflow; Prisma 8's contract workflow is deferred.
+- Prisma Postgres uses the direct `@prisma/adapter-pg` path; Accelerate is not configured.
 - Collaborators use direct Clerk user IDs in a project relationship; invitation workflows are out of scope.
 - Canvas snapshots use an explicit Save action and store only a Vercel Blob URL in `Project.canvasJsonPath`.
 - AI worker tasks call a provider adapter rather than a vendor-specific implementation.
@@ -79,14 +82,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 - The repository began with context files only. This session added the workspace scaffold and a minimal startup vertical slice, without product features.
 - The local PostgreSQL service is running on port 5432, but password authentication prevents migration/connection verification until credentials are configured in `apps/api/.env`.
+- Prisma Postgres is linked and the relational schema, migration, seed, and one-read verification completed successfully.
 - This session added the shadcn/Tailwind frontend foundation and reusable editor chrome without changing the existing startup route or server boundaries.
 - This session added the Clerk frontend/API foundation and kept the existing health endpoint public for startup and liveness checks.
-- The API environment loader resolves `apps/api/.env` when commands run from the workspace root.
+- The API environment loader resolves the workspace-root `.env` for the linked database and `apps/api/.env` for application settings.
 - Automated frontend build, API middleware tests, public health smoke checks, and unauthenticated/malformed-token API checks pass.
 - `npx clerk@latest doctor --json` could not run because the Clerk CLI package does not provide a Windows `win32-x64` binary in this environment.
 - This session improved the authenticated auth and editor UI while preserving the existing dark token system and generated shadcn primitives.
 - This session aligned the Clerk prebuilt sign-in and sign-up forms with the shared dark workspace tokens and verified the frontend production build.
-- This session documented the planned relational model and cross-service workflows without extending the Prisma schema.
+- This session aligned the Prisma feature specification and architecture notes with the implemented relational model and Prisma Postgres setup.
 - The project-dialogs feature scope was clarified as mock-only project list mutations; project detail, routing, persistence, and project opening remain deferred.
 - The mock project dialogs and sidebar actions were implemented and the frontend production build passed.
 - The project sidebar was refined so the `My Projects` and `Shared` tabs sit directly above their project lists.
