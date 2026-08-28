@@ -11,6 +11,7 @@ import {
   createPublicRateLimiter,
 } from "./middleware/rate-limit.js";
 import { healthRouter } from "./routes/health.routes.js";
+import { projectRouter } from "./modules/projects/project.routes.js";
 
 const app = express();
 
@@ -66,7 +67,12 @@ app.use(
   }),
 );
 app.use("/api", requireAuth);
+app.use(
+  "/api/projects",
+  express.json({ limit: env.projectBodyLimit, strict: true }),
+);
 app.use("/api", express.json({ limit: env.requestBodyLimit, strict: true }));
+app.use("/api/projects", projectRouter);
 
 app.use((_request, response) => {
   response.status(404).json({
@@ -74,6 +80,7 @@ app.use((_request, response) => {
       code: "NOT_FOUND",
       message: "Route not found",
     },
+    requestId: _request.requestId,
   });
 });
 

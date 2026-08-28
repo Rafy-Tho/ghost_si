@@ -148,7 +148,7 @@ Primary locations: `apps/api/src/modules/projects`, `apps/api/src/modules/collab
 - Query projects using owner-or-collaborator predicates rather than fetching by ID and checking afterward.
 - Recheck authorization inside transactions immediately before sensitive mutations.
 - Never accept `ownerId`, `requestedById`, role, or collaborator identity as trusted request data.
-- Return a non-enumerating `404` for inaccessible project IDs unless the product requires a distinct `403`.
+- Return a non-enumerating `404` for missing or unrelated project IDs. A collaborator who can already access a project may receive `403` for an owner-only operation.
 - Prevent the project owner from being inserted as a collaborator.
 - Enforce safe state transitions for archived projects.
 - Use database-generated or cryptographically secure identifiers for persistent resources.
