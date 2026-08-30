@@ -13,10 +13,9 @@ function ProjectList({
   isLoading,
   onDeleteProject,
   onRenameProject,
-  onRetry,
+onRetry,
   projects,
   activeProjectId,
-  onClose,
 }) {
   if (isLoading) {
     return (
@@ -70,8 +69,7 @@ function ProjectList({
           >
             <Link
               aria-current={activeProjectId === project.id ? "page" : undefined}
-              className="min-w-0 flex-1 rounded-lg px-1 py-0.5 outline-none transition-colors hover:text-brand focus-visible:ring-2 focus-visible:ring-ring"
-              onClick={onClose}
+className="min-w-0 flex-1 rounded-lg px-1 py-0.5 outline-none transition-colors hover:text-brand focus-visible:ring-2 focus-visible:ring-ring"
               to={`/editor/${encodeURIComponent(project.id)}`}
             >
               <p className="truncate text-sm font-medium text-copy-primary">{project.name}</p>
@@ -180,11 +178,10 @@ export function ProjectSidebar({
             icon={FolderOpen}
             onDeleteProject={onDeleteProject}
             onRenameProject={onRenameProject}
-            projects={ownedProjects}
+projects={ownedProjects}
             activeProjectId={activeProjectId}
             error={error}
             isLoading={isLoading}
-            onClose={onClose}
             onRetry={onRetry}
           />
         </TabsContent>
@@ -195,11 +192,10 @@ export function ProjectSidebar({
             icon={Users}
             onDeleteProject={onDeleteProject}
             onRenameProject={onRenameProject}
-            projects={sharedProjects}
+projects={sharedProjects}
             activeProjectId={activeProjectId}
             error={error}
             isLoading={isLoading}
-            onClose={onClose}
             onRetry={onRetry}
           />
         </TabsContent>
