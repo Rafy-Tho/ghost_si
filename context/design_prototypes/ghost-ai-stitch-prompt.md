@@ -140,13 +140,13 @@ Include:
 
 - Project owner section
 - Current collaborators list
-- Add collaborator input using a Clerk user ID
+- Add collaborator input using an email address for an existing Clerk user
 - “Add collaborator” action
 - Remove collaborator action
 - Permission label limited to “Owner” and “Collaborator”
 - Clear success and error feedback
 
-Do not design email invitations, billing, teams, enterprise roles, or advanced permission tiers.
+Do not design email invitations, invitation tokens, billing, teams, enterprise roles, or advanced permission tiers.
 
 SPECIFICATION EXPERIENCE
 

@@ -154,6 +154,16 @@ Primary locations: `apps/api/src/modules/projects`, `apps/api/src/modules/collab
 - Use database-generated or cryptographically secure identifiers for persistent resources.
 - Keep authorization tests beside each module and maintain a shared authorization matrix.
 
+For email-based collaborator lookup:
+
+- Treat submitted email addresses as untrusted lookup input; normalize and validate them at the API boundary.
+- Resolve an existing Clerk user server-side and persist only the immutable Clerk user ID.
+- Do not create access, invitation records, or pending state for unknown emails.
+- Rate-limit lookup and collaborator mutations separately from ordinary project reads, and cap each project at 100 collaborators.
+- Keep Clerk profile enrichment separate from authorization; missing profile data must not grant or remove access.
+- Do not log submitted email addresses, Clerk responses, or profile payloads.
+- Record audit events for successful collaborator additions and removals without recording email addresses.
+
 ### Authorization matrix
 
 | Operation | Owner | Collaborator | Unauthenticated |

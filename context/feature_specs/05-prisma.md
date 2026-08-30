@@ -23,12 +23,12 @@ Add `Project`:
 Add `ProjectCollaborator`:
 
 - project relation with cascade delete
-- collaborator `userId` mapped to a Clerk user ID
+- collaborator `userId` mapped to a Clerk user ID; an email entered in the share UI is resolved by the API and is not stored as the membership identity
 - creation timestamp
 - composite primary key on project ID and user ID
 - indexes on user ID and project/date
 
-The relation field on `Project` and the foreign-key field on `ProjectCollaborator` are required by Prisma. Do not add invitation, role, or local user fields.
+The relation field on `Project` and the foreign-key field on `ProjectCollaborator` are required by Prisma. Do not add invitation, role, email-only, or local user fields.
 
 ## Prisma Client
 

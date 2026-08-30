@@ -18,7 +18,7 @@ The initial `Project` and `ProjectCollaborator` models are implemented in `packa
 
 | Decision | MVP choice | Consequence |
 | --- | --- | --- |
-| Collaborator access | Direct Clerk user ID | No invitation table or email-token workflow |
+| Collaborator access | Existing Clerk user resolved from email | Email is lookup input; only the direct Clerk user ID is stored, with no invitation table or email-token workflow |
 | Canvas snapshots | Explicit Save action | The active graph is persisted only when the user saves |
 | AI integration | Provider adapter | Worker tasks do not depend directly on one AI vendor |
 | Specifications | One current spec per project | Regeneration replaces the current Blob reference; no spec history |
@@ -73,7 +73,7 @@ Constraints:
 - Composite primary key: `(projectId, userId)`.
 - Index `userId` for the shared-project list.
 - The API rejects adding the project owner as a collaborator.
-- No invitation, pending state, or collaborator role is modeled in the MVP.
+- No invitation, pending state, or collaborator role is modeled in the MVP. The share API may resolve an existing Clerk user from an email address, but the resulting relationship stores only the Clerk user ID.
 
 ### Spec
 

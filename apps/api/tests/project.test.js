@@ -43,6 +43,28 @@ function createMemoryRepository(initialProjects) {
         .sort((left, right) => right.createdAt - left.createdAt);
     },
 
+    async findAccessible(projectId, userId) {
+      const project = projects.get(projectId);
+
+      if (!project) {
+        return null;
+      }
+
+      if (
+        project.ownerId !== userId &&
+        !project.collaborators.some(({ userId: collaboratorId }) =>
+          collaboratorId === userId,
+        )
+      ) {
+        return null;
+      }
+
+      return {
+        ...project,
+        collaborators: [],
+      };
+    },
+
     async findAccess(projectId, userId) {
       const project = projects.get(projectId);
 
@@ -190,6 +212,47 @@ test("creates an untitled project with server-derived ownership", async () => {
     assert.equal(payload.project.ownerId, undefined);
   } finally {
     await server.close();
+  }
+});
+
+test("reads accessible project details and hides unrelated or missing IDs", async () => {
+  const ownerServer = await createTestServer(OWNER_ID, createService());
+  const collaboratorServer = await createTestServer(
+    COLLABORATOR_ID,
+    createService(),
+  );
+  const unrelatedServer = await createTestServer(UNRELATED_ID, createService());
+
+  try {
+    const owned = await fetch(`${ownerServer.url}/api/projects/project-owned`);
+    assert.equal(owned.status, 200);
+    const ownedProject = (await owned.json()).project;
+    assert.equal(ownedProject.access, "owner");
+    assert.equal(ownedProject.name, "Owned Project");
+    assert.equal(ownedProject.ownerId, undefined);
+
+    const shared = await fetch(
+      `${collaboratorServer.url}/api/projects/project-owned`,
+    );
+    assert.equal(shared.status, 200);
+    assert.equal((await shared.json()).project.access, "collaborator");
+
+    const hidden = await fetch(
+      `${unrelatedServer.url}/api/projects/project-owned`,
+    );
+    assert.equal(hidden.status, 404);
+
+    const missing = await fetch(
+      `${ownerServer.url}/api/projects/project-missing`,
+    );
+    assert.equal(missing.status, 404);
+
+    const malformed = await fetch(`${ownerServer.url}/api/projects/not.valid`);
+    assert.equal(malformed.status, 404);
+  } finally {
+    await ownerServer.close();
+    await collaboratorServer.close();
+    await unrelatedServer.close();
   }
 });
 

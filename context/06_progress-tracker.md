@@ -70,6 +70,9 @@ Update this file whenever the current phase, active feature, or implementation s
 - Updated the wire-editor-home feature specification, architecture context, and React code standards for the React/Vite data-fetching model.
 - Changed the desktop project sidebar to slide into its own layout column beside the workspace with coordinated width and transform transitions while preserving the mobile drawer behavior.
 - Set the sidebar to open by default on desktop-sized first loads while keeping it closed by default on mobile.
+- Added the membership-scoped `GET /api/projects/:projectId` endpoint with non-enumerating missing and unauthorized responses and regression coverage.
+- Implemented the project-aware editor shell with active-project loading, retry, access-denied, and session-error states, plus the responsive AI placeholder panel and disabled Share action.
+- Verified the editor workspace implementation with `npm test --workspace=@ghost-ai/api` and `npm run build:web`; all 20 API tests and the frontend production build pass. The build reports the existing large JavaScript chunk warning.
 
 ## In Progress
 
@@ -78,13 +81,13 @@ Update this file whenever the current phase, active feature, or implementation s
 ## Next Up
 
 - Run Clerk's setup doctor when the CLI is available on the development machine and complete signed-in browser/API smoke checks.
-- Add collaborator-management API and enforce owner-only collaborator changes after authentication.
-- Resolve the remaining security decisions in `context/07-security-plan.md` before implementing resource integrations and product endpoints.
+- Complete signed-in browser/API smoke checks for the Share dialog and Clerk directory lookup.
+- Resolve the remaining security decisions in `context/07-security-plan.md` before implementing resource integrations and product endpoints that depend on them.
 
 ## Open Questions
 
 - The production frontend and API origins still need to be recorded in deployment configuration and the existing Clerk application.
-- Security decisions listed in `context/07-security-plan.md` still need confirmation before implementing the related product boundaries.
+- Security decisions listed in `context/07-security-plan.md` still need confirmation before implementing the related product boundaries, including archived-project read-only behavior and production quotas.
 
 ## Architecture Decisions
 
@@ -97,11 +100,12 @@ Update this file whenever the current phase, active feature, or implementation s
 - Protected API requests require verified Clerk session tokens; the API uses exact-origin CORS, bounded JSON parsing, security headers, request IDs, and rate limits.
 - API errors are returned as redacted JSON responses, and security-relevant logs exclude credentials and request content.
 - Project listing is owner-or-collaborator scoped; project rename and hard deletion are owner-only, with unrelated project IDs hidden as `404`.
+- Project detail reads are owner-or-collaborator scoped and use the same non-enumerating `404` behavior for unrelated or missing IDs.
 - `/api/health` is public, while all other API routes are protected by default after Clerk middleware.
 - Prisma database access is shared by the API and worker through `packages/database`.
 - Prisma is pinned to 7.10.0 for the current `schema.prisma` and driver-adapter workflow; Prisma 8's contract workflow is deferred.
 - Prisma Postgres uses the direct `@prisma/adapter-pg` path; Accelerate is not configured.
-- Collaborators use direct Clerk user IDs in a project relationship; invitation workflows are out of scope.
+- Collaborators use direct Clerk user IDs in a project relationship; the share API resolves existing users from normalized email input, and invitation workflows remain out of scope.
 - Canvas snapshots use an explicit Save action and store only a Vercel Blob URL in `Project.canvasJsonPath`.
 - AI worker tasks call a provider adapter rather than a vendor-specific implementation.
 - The MVP stores one current specification per project; task runs remain durable relational records.
@@ -130,3 +134,11 @@ Update this file whenever the current phase, active feature, or implementation s
 - Project dialog name inputs now use explicit readable text, placeholder, background, and focus colors.
 - The desktop sidebar layout change was verified with `npm run build:web`.
 - Security baseline tests, frontend build, and Prisma validation pass. `npm audit --omit=dev` still reports 22 dependency vulnerabilities and requires a separate reachability review before applying breaking fixes.
+- Revised `context/feature_specs/08-editor-workspace-shell.md` to match the React/Vite SPA architecture, canonical project route, API-authoritative access checks, and explicitly scoped placeholder controls. Documentation validation with `git diff --check` passes.
+- Aligned the share feature specification, architecture records, Prisma guidance, security plan, and design prototype around existing Clerk users resolved by email while storing only Clerk user IDs.
+- Implemented the collaborators API with bounded membership reads, server-side Clerk directory enrichment, owner-only transactional add/remove actions, duplicate and self-add protection, safe directory errors, collaborator limits, and audit events.
+- Added collaborator API coverage for enriched lists, normalized email adds, duplicate/self/unknown users, owner authorization, inaccessible projects, unauthenticated requests, invalid input, and Clerk directory failures.
+- Added the project-aware Share dialog with owner-only add/remove/copy controls, read-only collaborator access, responsive member states, removal confirmation, clipboard feedback, TanStack Query invalidation, and focus return.
+- Verified `npm test --workspace=@ghost-ai/api`, `npm run build:web`, `npx prisma validate --schema packages/database/prisma/schema.prisma`, and `git diff --check`; all pass. The frontend build retains the existing large JavaScript chunk warning.
+- Reworked collaborator routes to use merged parent parameters and mounted the router together with its collaborator-specific limiter at `/api/projects/:projectId/collaborators`; the public collaborator URLs are unchanged.
+- Added a regression test proving both collaborator list and removal paths are covered by the shared collaborator limiter. The API suite now passes all 26 tests.

@@ -26,6 +26,19 @@ export function createProjectRepository(database = prisma) {
       });
     },
 
+    async findAccessible(projectId, userId) {
+      return database.project.findFirst({
+        select: projectFields,
+        where: {
+          id: projectId,
+          OR: [
+            { ownerId: userId },
+            { collaborators: { some: { userId } } },
+          ],
+        },
+      });
+    },
+
     async findAccess(projectId, userId) {
       return database.project.findUnique({
         select: {

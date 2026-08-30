@@ -29,6 +29,18 @@ export function createProjectApi(getToken) {
       return readProjectsPayload(payload);
     },
 
+    async getProject(projectId, { signal } = {}) {
+      const payload = await request(
+        `/api/projects/${encodeURIComponent(projectId)}`,
+        {
+          method: "GET",
+          signal,
+        },
+      );
+
+      return readProjectPayload(payload);
+    },
+
     async createProject(name) {
       const payload = await request("/api/projects", {
         body: JSON.stringify({ name }),

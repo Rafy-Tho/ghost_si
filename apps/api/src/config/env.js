@@ -49,6 +49,14 @@ export const env = {
     name: "PROJECT_BODY_LIMIT",
   }),
   rateLimit: {
+    collaboratorMax: parsePositiveInteger(
+      process.env.COLLABORATOR_RATE_LIMIT_MAX,
+      {
+        defaultValue: 30,
+        maximum: 10000,
+        name: "COLLABORATOR_RATE_LIMIT_MAX",
+      },
+    ),
     globalMax: parsePositiveInteger(process.env.GLOBAL_RATE_LIMIT_MAX, {
       defaultValue: 300,
       maximum: 10000,
