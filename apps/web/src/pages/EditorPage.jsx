@@ -8,6 +8,7 @@ import { EditorNavbar } from "../components/editor/editor-navbar.jsx";
 import { ProjectSidebar } from "../components/editor/project-sidebar.jsx";
 import { ProjectDialogs } from "../features/projects/project-dialogs.jsx";
 import { ShareDialog } from "../features/collaborators/share-dialog.jsx";
+import { CollaborativeCanvas } from "../features/canvas/collaborative-canvas.jsx";
 import { useProject } from "../features/projects/use-project.js";
 import { useProjectActions } from "../features/projects/use-project-actions.js";
 
@@ -271,17 +272,7 @@ export function EditorPage() {
 
           <section className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-base px-5 py-16 sm:px-8">
             {projectId ? (
-              <div className="relative z-10 max-w-xl text-center">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-                  Active workspace
-                </p>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-copy-primary sm:text-3xl">
-                  {activeProject.name}
-                </h2>
-                <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-copy-muted">
-                  The collaborative canvas will appear here when this workspace is connected.
-                </p>
-              </div>
+              <CollaborativeCanvas projectId={projectId} />
             ) : (
               <div className="relative z-10 max-w-xl text-center">
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
