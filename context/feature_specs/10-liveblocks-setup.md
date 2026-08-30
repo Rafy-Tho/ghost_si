@@ -70,7 +70,7 @@ The route must:
 4. Return the existing non-enumerating `404` response for a missing or inaccessible project.
 5. Derive the Liveblocks room ID server-side from the authorized project ID. The project ID may remain the room ID, but the client must never choose or map arbitrary room identities.
 6. Ensure the Liveblocks room exists, creating it only when needed. Room creation must be idempotent when concurrent requests encounter an already-existing room.
-7. Issue the smallest required room permissions for the current collaboration scope: `room:read` and `room:write`.
+7. Issue the smallest required room permission for the current collaboration scope: `room:write, comments:write` (the current Liveblocks syntax; write access also permits reading the room).
 8. Bind the Liveblocks session identity to the verified Clerk user ID.
 9. Attach safe user metadata containing the display name, avatar URL, and deterministic cursor color.
 

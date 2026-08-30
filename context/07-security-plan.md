@@ -221,7 +221,7 @@ Primary locations: `apps/api/src/integrations/liveblocks`, `apps/api/src/modules
 - Derive room IDs from authorized project IDs.
 - Check project membership before issuing a room token.
 - Bind the token identity to the verified Clerk user ID.
-- Issue the smallest required room permissions.
+- Issue the smallest required room permission using the current Liveblocks syntax (`*:write` for the collaborative canvas; write access also permits reading the room).
 - Use short token lifetimes and rate-limit token issuance.
 - Do not trust a client-provided project-to-room mapping.
 - Validate graph updates before applying server-generated AI changes.
