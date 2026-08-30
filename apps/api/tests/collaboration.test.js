@@ -45,7 +45,7 @@ function createLiveblocks() {
       return {
         allow(roomId, permissions) {
           assert.equal(roomId, PROJECT_ID);
-          assert.deepEqual(permissions, ["room:read", "room:write"]);
+          assert.deepEqual(permissions, ["*:write"]);
         },
         async authorize() {
           return {

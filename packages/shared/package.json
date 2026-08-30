@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
+    "./canvas": "./src/canvas/canvas.js",
     "./validation/collaborator": "./src/validation/collaborator.js",
     "./validation/project": "./src/validation/project.js"
   },

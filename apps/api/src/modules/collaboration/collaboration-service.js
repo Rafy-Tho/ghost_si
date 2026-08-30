@@ -51,7 +51,6 @@ export function createCollaborationService(
       if (!project) {
         throw collaborationNotFound();
       }
-
       let user;
       try {
         user = await userDirectory.getUserById(userId);
@@ -69,7 +68,7 @@ export function createCollaborationService(
         const liveblocksClient = liveblocks ?? getLiveblocksClient();
         await ensureRoom(liveblocksClient, projectId);
         const session = liveblocksClient.prepareSession(userId, { userInfo });
-        session.allow(projectId, ["room:read", "room:write"]);
+        session.allow(projectId, ["room:write", "comments:write"])
         const authorization = await session.authorize();
         if (authorization.status >= 400) {
           throw authorization.error ?? new Error("Liveblocks authorization failed");
