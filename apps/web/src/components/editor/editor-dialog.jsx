@@ -6,17 +6,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 export function EditorDialog({
   children,
   description,
   footer,
+  contentClassName,
   title,
   ...dialogProps
 }) {
   return (
     <Dialog {...dialogProps}>
-      <DialogContent className="rounded-3xl border border-surface-border bg-surface text-copy-primary shadow-2xl">
+      <DialogContent
+        className={cn(
+          "rounded-3xl border border-surface-border bg-surface text-copy-primary shadow-2xl",
+          contentClassName,
+        )}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description ? (

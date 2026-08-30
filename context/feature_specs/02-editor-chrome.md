@@ -21,9 +21,10 @@ Create `components/editor/project-sidebar.jsx`.
 
 Requirements:
 
-- sidebar should float above the editor canvas
-- opening it should not push page content
-- slides in from the left
+- desktop sidebar should occupy its own column beside the editor workspace
+- opening it should push the workspace area horizontally instead of covering it
+- slides in from the left with a matching column-width transition
+- on mobile, use the existing drawer behavior with a backdrop scrim
 - accepts `isOpen` prop
 - header with `Projects` title + close button
 - shadcn `Tabs`:

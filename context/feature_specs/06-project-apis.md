@@ -11,6 +11,7 @@ The API uses the existing Prisma `Project` and `ProjectCollaborator` models. It 
 Use Express parameter syntax:
 
 - `GET /api/projects` - list projects accessible to the authenticated user
+- `GET /api/projects/:projectId` - read one project accessible to the authenticated user
 - `POST /api/projects` - create a project owned by the authenticated user
 - `PATCH /api/projects/:projectId` - rename an owned project
 - `DELETE /api/projects/:projectId` - permanently delete an owned project
@@ -22,6 +23,7 @@ Routes are registered below the existing global rate limiter, `requireAuth`, and
 - Use the verified Clerk `request.userId` as the acting identity and `ownerId`.
 - Never accept `ownerId`, user IDs, status, collaborators, or Blob paths from request input.
 - `GET /api/projects` returns projects where the user is the owner or a collaborator.
+- `GET /api/projects/:projectId` returns a project only when the user is the owner or a collaborator.
 - Each listed project includes derived `access`: `owner` or `collaborator`.
 - Only the owner can rename or delete a project in this feature.
 - A known collaborator attempting an owner-only mutation receives `403`.
@@ -87,6 +89,7 @@ Project responses expose only:
 Do not expose `ownerId`, `canvasJsonPath`, or collaborator records in this API response.
 
 - `GET /api/projects` returns `200` with `{ "projects": [] }`.
+- `GET /api/projects/:projectId` returns `200` with `{ "project": { ... } }`.
 - `POST /api/projects` returns `201` with `{ "project": { ... } }`.
 - `PATCH /api/projects/:projectId` returns `200` with `{ "project": { ... } }`.
 - `DELETE /api/projects/:projectId` returns `204` with an empty body.
@@ -132,6 +135,7 @@ Required status handling:
 ## Check When Done
 
 - Express routes exist for list, create, rename, and delete.
+- The detail route returns only projects accessible to the authenticated requester.
 - List returns both owned and shared projects with derived access.
 - Server-derived ownership and owner-only mutations are enforced.
 - Inaccessible IDs do not enumerate project existence.

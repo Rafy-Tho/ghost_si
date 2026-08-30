@@ -11,6 +11,7 @@ export function createProjectRouter({ service } = {}) {
   const controller = createProjectController(service);
 
   router.get("/", controller.list);
+  router.get("/:projectId", validateProjectId, controller.get);
   router.post("/", validateCreateProject, controller.create);
   router.patch(
     "/:projectId",

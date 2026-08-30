@@ -26,6 +26,10 @@ export const router = createBrowserRouter([
         element: <EditorPage />,
       },
       {
+        path: "/editor/:projectId",
+        element: <EditorPage />,
+      },
+      {
         path: "*",
         element: <NotFoundPage />,
       },

@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
+    "./validation/collaborator": "./src/validation/collaborator.js",
     "./validation/project": "./src/validation/project.js"
   },
   "dependencies": {

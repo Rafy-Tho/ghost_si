@@ -19,6 +19,10 @@
 - Keep route definitions and protected-route behavior in the frontend routing layer.
 - Keep browser-side API calls in frontend services rather than directly in presentational components.
 - Keep feature behavior in feature modules and reusable UI in shared components.
+- Use TanStack Query for API server state, caching, loading/error states, and mutations; use local React state for ephemeral UI state only.
+- Keep query keys scoped to the authenticated Clerk user and clear cached protected data on sign-out or user changes.
+- Feature API services must parse successful responses, reject non-2xx responses with normalized errors, pass cancellation signals to fetch, and handle `204` responses without JSON parsing.
+- Invalidate or update query cache after successful mutations instead of forcing browser reloads.
 
 ## Express API
 

@@ -118,6 +118,10 @@ textarea {
   font: inherit;
 }
 
+button:not(:disabled) {
+  cursor: pointer;
+}
+
 .startup-page {
   display: grid;
   min-height: 100vh;

@@ -2,7 +2,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EditorDialog } from "@/components/editor/editor-dialog.jsx";
-import { PROJECT_NAME_MAX_LENGTH } from "./use-project-dialogs.js";
+import { PROJECT_NAME_MAX_LENGTH } from "./use-project-actions.js";
 
 function DialogCancelButton({ onCancel }) {
   return (
@@ -13,9 +13,9 @@ function DialogCancelButton({ onCancel }) {
 }
 
 export function ProjectDialogs({
+  canSubmit,
   closeDialog,
   confirmDelete,
-  createSlug,
   dialogType,
   draftName,
   handleNameChange,
@@ -37,7 +37,7 @@ export function ProjectDialogs({
           <>
             <DialogCancelButton onCancel={closeDialog} />
             <Button
-              disabled={isSubmitting}
+              disabled={isSubmitting || !canSubmit}
               form="create-project-form"
               type="submit"
             >
@@ -80,14 +80,12 @@ export function ProjectDialogs({
 
           <div className="rounded-xl border border-surface-border bg-elevated px-3 py-2.5">
             <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-copy-faint">
-              Slug preview
+              Workspace identifier
             </p>
-            <code
-              aria-live="polite"
-              className="mt-1 block break-all font-mono text-xs text-brand"
-            >
-              /{createSlug}
-            </code>
+            <p className="mt-1 font-mono text-xs text-brand">Assigned by the server after creation</p>
+            <p className="mt-1 text-xs leading-5 text-copy-muted">
+              The collaboration room will be derived from the created project ID.
+            </p>
           </div>
 
           {validationError ? (
@@ -108,7 +106,7 @@ export function ProjectDialogs({
           <>
             <DialogCancelButton onCancel={closeDialog} />
             <Button
-              disabled={isSubmitting}
+              disabled={isSubmitting || !canSubmit}
               form="rename-project-form"
               type="submit"
             >
@@ -155,7 +153,7 @@ export function ProjectDialogs({
       <EditorDialog
         description={
           selectedProject
-            ? `This will remove "${selectedProject.name}" from the mock project list. This action cannot be undone.`
+            ? `This will permanently delete "${selectedProject.name}". This action cannot be undone.`
             : "This action cannot be undone."
         }
         footer={
@@ -181,7 +179,7 @@ export function ProjectDialogs({
         title="Delete project"
       >
         <p className="text-sm leading-6 text-copy-secondary">
-          Delete this project from your mock workspace?
+          Delete this project from your workspace?
         </p>
       </EditorDialog>
     </>

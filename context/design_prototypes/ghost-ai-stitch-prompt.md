@@ -41,7 +41,7 @@ Make the editor the main product experience.
 Use a full-viewport layout:
 
 - Fixed top navbar approximately 56px high
-- Floating project sidebar on the left
+- Desktop project sidebar in its own column on the left, beside the canvas
 - Large central architecture canvas
 - Slide-over AI assistant panel on the right
 - Responsive mobile layout that converts sidebars into drawers or sheets
@@ -65,7 +65,7 @@ Left project sidebar:
 - Project list with project name, last edited time, and collaborator count
 - Empty state for projects
 - Full-width “New Project” button at the bottom
-- Use a floating overlay that does not push the canvas
+- On desktop, let the sidebar push the canvas area instead of covering it; on mobile, convert it into a drawer with a scrim
 
 Architecture canvas:
 
@@ -140,13 +140,13 @@ Include:
 
 - Project owner section
 - Current collaborators list
-- Add collaborator input using a Clerk user ID
+- Add collaborator input using an email address for an existing Clerk user
 - “Add collaborator” action
 - Remove collaborator action
 - Permission label limited to “Owner” and “Collaborator”
 - Clear success and error feedback
 
-Do not design email invitations, billing, teams, enterprise roles, or advanced permission tiers.
+Do not design email invitations, invitation tokens, billing, teams, enterprise roles, or advanced permission tiers.
 
 SPECIFICATION EXPERIENCE
 

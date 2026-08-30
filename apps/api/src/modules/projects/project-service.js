@@ -33,6 +33,16 @@ export function createProjectService(repository = createProjectRepository()) {
       return projects.map((project) => toProjectResponse(project, userId));
     },
 
+    async getProject(userId, projectId) {
+      const project = await repository.findAccessible(projectId, userId);
+
+      if (!project) {
+        throw projectNotFound();
+      }
+
+      return toProjectResponse(project, userId);
+    },
+
     async createProject(userId, input) {
       const project = await repository.create({
         name: input.name ?? DEFAULT_PROJECT_NAME,

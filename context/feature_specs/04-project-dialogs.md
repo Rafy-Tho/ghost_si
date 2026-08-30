@@ -4,15 +4,15 @@
 
 Build the `/editor` home screen and add project dialogs/sidebar actions using mock data only. No API calls, persistence, project detail screen, or project navigation yet.
 
-## Fix Sidebar issue
+## Sidebar Layout
 
-Keep the existing floating sidebar. `My Projects` and `Shared` remain tabs inside the sidebar, with the tab controls displayed directly above the selected project list. The selected tab must have a clear active visual state and tapping a tab must switch the displayed list. Do not create separate side panels or change the existing sidebar behavior.
+On desktop, the project sidebar occupies its own column beside the editor workspace and opening it pushes the workspace area horizontally instead of covering it. On mobile, it remains a slide-in drawer with a backdrop scrim. `My Projects` and `Shared` remain tabs inside the sidebar, with the tab controls displayed directly above the selected project list. The selected tab must have a clear active visual state and tapping a tab must switch the displayed list.
 
 Project rows are display-only for this feature. Clicking a project must not navigate to a project detail screen or change the editor workspace yet.
 
 ## Editor Home
 
-Reuse the existing editor layout. Do not modify the navbar or sidebar behavior.
+Reuse the existing editor layout and navbar. Keep the sidebar responsive behavior described above.
 
 In the center of the page, add:
 

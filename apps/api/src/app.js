@@ -11,7 +11,9 @@ import {
   createPublicRateLimiter,
 } from "./middleware/rate-limit.js";
 import { healthRouter } from "./routes/health.routes.js";
+import { collaboratorRouter } from "./modules/collaborators/collaborator.routes.js";
 import { projectRouter } from "./modules/projects/project.routes.js";
+import { collaborationRouter } from "./modules/collaboration/collaboration.routes.js";
 
 const app = express();
 
@@ -72,7 +74,16 @@ app.use(
   express.json({ limit: env.projectBodyLimit, strict: true }),
 );
 app.use("/api", express.json({ limit: env.requestBodyLimit, strict: true }));
+app.use(
+  "/api/projects/:projectId/collaborators",
+  createAuthenticatedRateLimiter({
+    max: env.rateLimit.collaboratorMax,
+    windowMs: env.rateLimit.windowMs,
+  }),
+  collaboratorRouter,
+);
 app.use("/api/projects", projectRouter);
+app.use("/api", collaborationRouter);
 
 app.use((_request, response) => {
   response.status(404).json({

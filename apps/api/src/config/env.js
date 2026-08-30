@@ -49,6 +49,14 @@ export const env = {
     name: "PROJECT_BODY_LIMIT",
   }),
   rateLimit: {
+    collaboratorMax: parsePositiveInteger(
+      process.env.COLLABORATOR_RATE_LIMIT_MAX,
+      {
+        defaultValue: 30,
+        maximum: 10000,
+        name: "COLLABORATOR_RATE_LIMIT_MAX",
+      },
+    ),
     globalMax: parsePositiveInteger(process.env.GLOBAL_RATE_LIMIT_MAX, {
       defaultValue: 300,
       maximum: 10000,
@@ -79,5 +87,11 @@ export const env = {
   clerk: {
     publishableKey: requiredEnvironmentVariable("CLERK_PUBLISHABLE_KEY"),
     secretKey: requiredEnvironmentVariable("CLERK_SECRET_KEY"),
+  },
+  liveblocks: {
+    secretKey:
+      nodeEnv === "test"
+        ? process.env.LIVEBLOCKS_SECRET_KEY?.trim() || "sk_test_liveblocks_secret"
+        : requiredEnvironmentVariable("LIVEBLOCKS_SECRET_KEY"),
   },
 };

@@ -7,6 +7,14 @@ export function createProjectController(service = createProjectService()) {
       response.json({ projects });
     },
 
+    get: async (request, response) => {
+      const project = await service.getProject(
+        request.userId,
+        request.validatedParams.projectId,
+      );
+      response.json({ project });
+    },
+
     create: async (request, response) => {
       const project = await service.createProject(
         request.userId,
