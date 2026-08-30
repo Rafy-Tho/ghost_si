@@ -88,4 +88,10 @@ export const env = {
     publishableKey: requiredEnvironmentVariable("CLERK_PUBLISHABLE_KEY"),
     secretKey: requiredEnvironmentVariable("CLERK_SECRET_KEY"),
   },
+  liveblocks: {
+    secretKey:
+      nodeEnv === "test"
+        ? process.env.LIVEBLOCKS_SECRET_KEY?.trim() || "sk_test_liveblocks_secret"
+        : requiredEnvironmentVariable("LIVEBLOCKS_SECRET_KEY"),
+  },
 };

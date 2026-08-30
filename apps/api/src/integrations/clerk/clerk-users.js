@@ -68,5 +68,10 @@ export function createClerkUserDirectory(client = clerkClient) {
 
       return users;
     },
+
+    async getUserById(userId) {
+      const users = await this.getUsersByIds([userId]);
+      return users[0] ?? null;
+    },
   };
 }

@@ -13,6 +13,7 @@ import {
 import { healthRouter } from "./routes/health.routes.js";
 import { collaboratorRouter } from "./modules/collaborators/collaborator.routes.js";
 import { projectRouter } from "./modules/projects/project.routes.js";
+import { collaborationRouter } from "./modules/collaboration/collaboration.routes.js";
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use(
   collaboratorRouter,
 );
 app.use("/api/projects", projectRouter);
+app.use("/api", collaborationRouter);
 
 app.use((_request, response) => {
   response.status(404).json({
